@@ -38,7 +38,8 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
            ba_ha1 = ba1*weight1,
            ba_ha2 = ba2*weight1,
            bachange_ha_yr = weight1*(ba2 - ba1)/5, 
-           country = "Finland") %>%
+           country = "Finland", 
+           Code = as.character(Code)) %>%
     filter(tree_type_1st_census %in% c("0", "1", "3", "7")) %>%
     left_join(species, by = "Code") %>%
     dplyr::select(treecode, plotcode, species = Fullname, treestatus, dbh1, dbh2, 
