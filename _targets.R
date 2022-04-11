@@ -37,9 +37,11 @@ list(
   tar_target(FinnishNFI_tree_raw_file, "data/fin_nfi_sample.csv", format = "file"), 
   tar_target(sgdd_file, "data/sgdd_nfi_sample.csv", format = "file"),
   tar_target(wai_file, "data/wai_nfi_sample.csv", format = "file"),
+  tar_target(species_file, "data/species.csv", format = "file"),
   
   # Load raw data
   tar_target(FinnishNFI_tree_raw, fread(FinnishNFI_tree_raw_file)), 
   tar_target(sgdd, fread(sgdd_file)), 
-  tar_target(wai, fread(wai_file))
+  tar_target(wai, fread(wai_file)), 
+  tar_target(species, fread(species_file))
 )
