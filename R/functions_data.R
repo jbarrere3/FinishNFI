@@ -33,7 +33,7 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
            ba2 = (pi*((dbh2/1000)/2)^2), 
            height1 = NA_real_, 
            height2 = NA_real_, 
-           weigth1 = NA_real_, 
+           weight1 = NA_real_, 
            weight2 = NA_real_, 
            ba_ha1 = ba1*weight1,
            ba_ha2 = ba2*weight1,
