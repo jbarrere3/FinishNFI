@@ -43,5 +43,12 @@ list(
   tar_target(FinnishNFI_tree_raw, fread(FinnishNFI_tree_raw_file)), 
   tar_target(sgdd, fread(sgdd_file)), 
   tar_target(wai, fread(wai_file)), 
-  tar_target(species, fread(species_file))
+  tar_target(species, fread(species_file)), 
+  
+  # Format the data
+  tar_target(FUNDIV_tree_FI, format_FinnishNFI_tree_to_FUNDIV(FinnishNFI_tree_raw, species)), 
+  
+  # Save the formatted files
+  tar_target(FUNDIV_tree_FI_file, write_on_disk(FUNDIV_tree_FI, "output/FinnishNFI_tree.csv"), 
+             format = "file")
 )
