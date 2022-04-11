@@ -41,5 +41,5 @@ list(
   # Load raw data
   tar_target(FinnishNFI_tree_raw, fread(FinnishNFI_tree_raw_file)), 
   tar_target(sgdd, fread(sgdd_file)), 
-  tar_target(wai, fread(wai))
+  tar_target(wai, fread(wai_file))
 )
