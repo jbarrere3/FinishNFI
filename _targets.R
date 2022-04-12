@@ -55,5 +55,8 @@ list(
   # Exploratory plots
   tar_target(fig_disturbed_plots, 
              plot_disturbed_plots(FinnishNFI_tree_raw, "fig/fig_disturbed_plots.png"), 
+             format = "file"), 
+  tar_target(fig_severity_per_disturbance, 
+             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, "fig/fig_severity_per_disturbance.png"), 
              format = "file")
 )
