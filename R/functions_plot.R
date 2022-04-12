@@ -85,7 +85,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, f
   
   
   ## - save the plot
-  ggsave(file.in, plot.out, width = 22, height = 15, units = "cm", dpi = 600)
+  ggsave(file.in, plot.out, width = 25, height = 10, units = "cm", dpi = 600)
   return(file.in)
   
 }

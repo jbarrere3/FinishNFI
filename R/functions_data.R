@@ -49,6 +49,55 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
 
 
 
+#' Format Finnish NFI tree table to FUNDIV template
+#' @param FinnishNFI_tree_raw Finnish NFI raw tree table
+#' @param FUNDIV_tree_FI Finnish NFI tree table formatted for FUNDIV
+#' @param species table to convert species code to Latin name
+format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, species){
+  FinnishNFI_tree_raw %>%
+    mutate(plotcode = as.character(plotcode), 
+           cluster = NA_real_,
+           country = "Finland", 
+           longitude = NA_real_, 
+           latitude = NA_real_, 
+           surveydate1 = as.numeric(substr(as.character(survey1), 1, 4)), 
+           surveydate2 = as.numeric(substr(as.character(survey2), 1, 4)), 
+           yearsbetweensurveys = surveydate2 - surveydate1, 
+           biome = NA_real_, 
+           disturbance.nature = case_when(stand_level_dist_agent == "A1" ~ "storm", 
+                                          stand_level_dist_agent == "A5" ~ "fire", 
+                                          stand_level_dist_agent == "A2" ~ "other", 
+                                          substr(stand_level_dist_agent, 1, 1) == "B" ~ "other", 
+                                          substr(stand_level_dist_agent, 1, 1) == "C" ~ "other", 
+                                          TRUE ~ "none")) %>%
+    dplyr::select(plotcode, cluster, country, longitude, latitude, disturbance.nature,
+                  yearsbetweensurveys, surveydate1, surveydate2, biome) %>%
+    distinct() %>%
+    filter(plotcode %in% FUNDIV_tree_FI$plotcode) %>%
+    left_join((FUNDIV_tree_FI %>%
+                 mutate(harvest = case_when(treestatus == 3 ~ 1, TRUE ~ 0), 
+                        dead = case_when(treestatus > 2 ~ 1, TRUE ~ 0)) %>%
+                 group_by(plotcode) %>%
+                 summarise(ba_ha1 = sum(ba_ha1, na.rm = T),
+                           ba_ha2 = sum(ba_ha2, na.rm = T), 
+                           n.harvest = sum(harvest, na.rm = T), 
+                           percent.dead = round(sum(dead, na.rm = T)/n()*100, digits = 0)) %>%
+                 mutate(management = case_when(n.harvest > 0 ~ 1, TRUE ~ 0)) %>%
+                 dplyr::select(plotcode, ba_ha1, ba_ha2, management, percent.dead)), 
+              by = "plotcode") %>%
+    mutate(disturbance.nature = ifelse(percent.dead == 0, "none", disturbance.nature), 
+           disturbance.severity = case_when((disturbance.nature != "none" & percent.dead %in% c(1:25)) ~ 1, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(26:50)) ~ 2, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(51:75)) ~ 3, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(76:100)) ~ 4,
+                                            TRUE ~ 0)) %>%
+    dplyr::select(plotcode, cluster, country, longitude, latitude, 
+                  yearsbetweensurveys, surveydate1, surveydate2, biome, 
+                  ba_ha1, ba_ha2, management, disturbance.severity, disturbance.nature)
+}
+
+
+
 #' Function to get the path of a file, and create directories if they don't exist
 #' @param file.in character: path of the file, filename included (ex: "plot/plot.png")
 create_dir_if_needed <- function(file.in){

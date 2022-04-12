@@ -46,10 +46,15 @@ list(
   tar_target(species, fread(species_file)), 
   
   # Format the data
-  tar_target(FUNDIV_tree_FI, format_FinnishNFI_tree_to_FUNDIV(FinnishNFI_tree_raw, species)), 
+  tar_target(FUNDIV_tree_FI, 
+             format_FinnishNFI_tree_to_FUNDIV(FinnishNFI_tree_raw, species)), 
+  tar_target(FUNDIV_plot_FI, 
+             format_FinnishNFI_plot_to_FUNDIV(FinnishNFI_tree_raw, FUNDIV_tree_FI, species)),
   
   # Save the formatted files
   tar_target(FUNDIV_tree_FI_file, write_on_disk(FUNDIV_tree_FI, "output/FinnishNFI_tree.csv"), 
+             format = "file"),
+  tar_target(FUNDIV_plot_FI, write_on_disk(FUNDIV_plot_FI, "output/FinnishNFI_plot.csv"), 
              format = "file"),
   
   # Exploratory plots
