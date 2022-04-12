@@ -34,9 +34,10 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
     summarize(n = n()) %>%
     ggplot(aes(x = stand_level_dist_agent, y = n)) + 
     geom_bar(stat = "identity", colour = "black") + 
-    facet_wrap(~ disturbance, scales = "free_y", nrow = 1) + 
+    facet_wrap(~ disturbance, scales = "free_x", nrow = 1) + 
     theme_bw() + 
-    ylab("Number of plots impacted")
+    ylab("Number of plots impacted") + 
+    xlab("Disturbance agent")
   
   
   ## - save the plot
