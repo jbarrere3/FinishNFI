@@ -29,13 +29,13 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
            disturbance = case_when(disturbance.type == "A" ~ "Abiotic", 
                                    disturbance.type == "B" ~ "Animals", 
                                    disturbance.type == "C" ~ "Fungi",
-                                   disturbance.type == "D" ~ "Other")) %>%
-    group_by(disturbance, disturbance.type) %>%
+                                   TRUE ~ "Other")) %>%
+    group_by(disturbance, stand_level_dist_agent) %>%
     summarize(n = n()) %>%
-    ggplot(aes(x = disturbance.type, y = n)) + 
+    ggplot(aes(x = stand_level_dist_agent, y = n)) + 
     geom_bar(stat = "identity", colour = "black") + 
-    facet_wrap(~ disturbance, scales = "free", nrow = 2) + 
     coord_flip() + 
+    facet_wrap(~ disturbance, scales = "free_y", nrow = 2) + 
     theme_bw() + 
     ylab("Number of plots impacted")
   
