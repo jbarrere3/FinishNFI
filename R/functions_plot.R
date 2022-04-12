@@ -24,8 +24,8 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
   plot.out <- FinnishNFI_tree_raw %>%
     dplyr::select(plotcode, stand_level_dist_agent) %>%
     distinct() %>%
-    mutate(disturbance.type = ifelse(is.na(stand_level_dist_agent), "D2", 
-                                     substr(stand_level_dist_agent, 1, 1)), 
+    mutate(stand_level_dist_agent = ifelse(is.na(stand_level_dist_agent), "D2", stand_level_dist_agent), 
+           disturbance.type = substr(stand_level_dist_agent, 1, 1), 
            disturbance = case_when(disturbance.type == "A" ~ "Abiotic", 
                                    disturbance.type == "B" ~ "Animals", 
                                    disturbance.type == "C" ~ "Fungi",
@@ -34,7 +34,7 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
     summarize(n = n()) %>%
     ggplot(aes(x = disturbance.type, y = n)) + 
     geom_bar(stat = "identity", colour = "black") + 
-    facet_wrap(~ disturbance, scales = "free") + 
+    facet_wrap(~ disturbance, scales = "free", nrow = 2) + 
     coord_flip() + 
     theme_bw() + 
     ylab("Number of plots impacted")
