@@ -73,7 +73,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, f
     mutate(disturbance = paste0(disturbance.type, " (n = ", n(), ")")) %>%
     left_join((FUNDIV_tree_FI %>%
                  filter(treestatus != 1) %>%
-                 mutate(dead = case_when(treestatus %in% c(3:5))) %>%
+                 mutate(dead = ifelse(treestatus %in% c(3:5), 1, 0)) %>%
                  group_by(plotcode) %>%
                  summarize(prop.dead = round(sum(dead)/n(), digits = 2))), 
               by = "plotcode") %>%
