@@ -50,5 +50,10 @@ list(
   
   # Save the formatted files
   tar_target(FUNDIV_tree_FI_file, write_on_disk(FUNDIV_tree_FI, "output/FinnishNFI_tree.csv"), 
+             format = "file"),
+  
+  # Exploratory plots
+  tar_target(fig_disturbed_plots, 
+             plot_disturbed_plots(FinnishNFI_tree_raw, "fig/fig_disturbed_plots.png"), 
              format = "file")
 )
