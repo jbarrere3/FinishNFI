@@ -62,7 +62,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, f
     dplyr::select(plotcode, stand_level_dist_agent, stand_level_dist_time_since) %>%
     distinct() %>%
     filter(stand_level_dist_time_since != 4) %>%
-    mutate(plotcode = as.character(plotcoode), 
+    mutate(plotcode = as.character(plotcode), 
            disturbance.type = case_when(stand_level_dist_agent == "A1" ~ "storm", 
                                         stand_level_dist_agent == "A5" ~ "fire", 
                                         stand_level_dist_agent == "A2" ~ "snow", 
