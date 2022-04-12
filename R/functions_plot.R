@@ -26,10 +26,10 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
     distinct() %>%
     mutate(disturbance.type = ifelse(is.na(stand_level_dist_agent), "D2", 
                                      substr(stand_level_dist_agent, 1, 1)), 
-           disturbance = case_when(disturbance == "A" ~ "Abiotic", 
-                                   disturbance == "B" ~ "Animals", 
-                                   disturbance == "C" ~ "Fungi",
-                                   disturbance == "D" ~ "Other")) %>%
+           disturbance = case_when(disturbance.type == "A" ~ "Abiotic", 
+                                   disturbance.type == "B" ~ "Animals", 
+                                   disturbance.type == "C" ~ "Fungi",
+                                   disturbance.type == "D" ~ "Other")) %>%
     group_by(disturbance, disturbance.type) %>%
     summarize(n = n()) %>%
     ggplot(aes(x = disturbance.type, y = n)) + 
