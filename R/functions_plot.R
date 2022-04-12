@@ -34,14 +34,13 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
     summarize(n = n()) %>%
     ggplot(aes(x = stand_level_dist_agent, y = n)) + 
     geom_bar(stat = "identity", colour = "black") + 
-    coord_flip() + 
-    facet_wrap(~ disturbance, scales = "free_y", nrow = 2) + 
+    facet_wrap(~ disturbance, scales = "free_y", nrow = 1) + 
     theme_bw() + 
     ylab("Number of plots impacted")
   
   
   ## - save the plot
-  ggsave(file.in, plot.out, width = 18, height = 16, units = "cm", dpi = 600)
+  ggsave(file.in, plot.out, width = 25, height = 10, units = "cm", dpi = 600)
   return(file.in)
   
 }
