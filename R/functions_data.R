@@ -33,11 +33,14 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
            ba2 = (pi*((dbh2/1000)/2)^2), 
            height1 = NA_real_, 
            height2 = NA_real_, 
-           weight1 = NA_real_, 
+           surveydate1 = as.numeric(substr(as.character(survey1), 1, 4)), 
+           surveydate2 = as.numeric(substr(as.character(survey2), 1, 4)), 
+           yearsbetweensurveys = surveydate2 - surveydate1, 
+           ba_ha1 = as.numeric(gsub("\\,", "\\.", ba_per_ha)),
+           ba_ha2 = NA_real_,
+           weight1 = ba_ha1/ba1, 
            weight2 = NA_real_, 
-           ba_ha1 = ba1*weight1,
-           ba_ha2 = ba2*weight1,
-           bachange_ha_yr = weight1*(ba2 - ba1)/5, 
+           bachange_ha_yr = weight1*(ba2 - ba1)/yearsbetweensurveys, 
            country = "Finland", 
            Code = as.character(Code)) %>%
     filter(tree_type_1st_census %in% c("0", "1", "3", "7")) %>%
