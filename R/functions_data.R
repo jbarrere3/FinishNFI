@@ -55,11 +55,14 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
 #' @param species table to convert species code to Latin name
 format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, species){
   FinnishNFI_tree_raw %>%
+    st_as_sf(coords = c("x", "y"), crs = 2393) %>%
+    st_transform(crs = 4236) %>%
+    mutate(longitude = sf::st_coordinates(.)[,1],
+           latitude = sf::st_coordinates(.)[,2]) %>%
+    st_drop_geometry() %>%
     mutate(plotcode = as.character(plotcode), 
            cluster = NA_real_,
            country = "Finland", 
-           longitude = NA_real_, 
-           latitude = NA_real_, 
            surveydate1 = as.numeric(substr(as.character(survey1), 1, 4)), 
            surveydate2 = as.numeric(substr(as.character(survey2), 1, 4)), 
            yearsbetweensurveys = surveydate2 - surveydate1, 
