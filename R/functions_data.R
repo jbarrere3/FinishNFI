@@ -60,7 +60,7 @@ format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI
   FinnishNFI_tree_raw %>%
     filter(x > 3040879 & x < 3681583 & y > 6570363 & y < 7888258) %>%
     st_as_sf(coords = c("x", "y"), crs = 2393) %>%
-    st_transform(crs = 4236) %>%
+    st_transform(crs = 4326) %>%
     mutate(longitude = sf::st_coordinates(.)[,1],
            latitude = sf::st_coordinates(.)[,2]) %>%
     st_drop_geometry() %>%
