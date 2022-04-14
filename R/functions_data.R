@@ -58,6 +58,7 @@ format_FinnishNFI_tree_to_FUNDIV <- function(FinnishNFI_tree_raw, species){
 #' @param species table to convert species code to Latin name
 format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, species){
   FinnishNFI_tree_raw %>%
+    filter(x > 3040879 & x < 3681583 & y > 6570363 & y < 7888258) %>%
     st_as_sf(coords = c("x", "y"), crs = 2393) %>%
     st_transform(crs = 4236) %>%
     mutate(longitude = sf::st_coordinates(.)[,1],
