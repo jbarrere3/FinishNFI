@@ -48,11 +48,16 @@ plot_disturbed_plots <- function(FinnishNFI_tree_raw, file.in){
 }
 
 
+
+
+
 #' Plot number of plots by disturbance type
 #' @param FinnishNFI_tree_raw Finnish NFI raw tree table
 #' @param FUNDIV_tree_FI Finnish NFI tree table formatted for FUNDIV
+#' @param filter.in numeric vector: stand_level_dist_sever values to keep to consider the plot disturbed
 #' @param file.in Path to the file where to save the plot
-plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, file.in){
+plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, 
+                                          filter.in, file.in){
   
   ## - Create directories if needed
   create_dir_if_needed(file.in)
@@ -62,6 +67,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, f
     dplyr::select(plotcode, stand_level_dist_agent, stand_level_dist_time_since) %>%
     distinct() %>%
     filter(stand_level_dist_time_since != 4) %>%
+    filter(stand_level_dist_sever %in% filter.in) %>%
     mutate(plotcode = as.character(plotcode), 
            disturbance.type = case_when(stand_level_dist_agent == "A1" ~ "storm", 
                                         stand_level_dist_agent == "A5" ~ "fire", 
