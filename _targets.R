@@ -62,15 +62,15 @@ list(
              plot_disturbed_plots(FinnishNFI_tree_raw, "fig/fig_disturbed_plots.png"), 
              format = "file"), 
   tar_target(fig_severity_per_disturbance_noFilter, 
-             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = as.character(c(0:6)),
+             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = c(0:6),
                                            "fig/fig_severity_per_disturbance_noFilter.png"), 
              format = "file"), 
   tar_target(fig_severity_per_disturbance_smallFilter, 
-             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = as.character(c(4:6)),
+             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = c(4:6),
                                            "fig/fig_severity_per_disturbance_smallFilter.png"), 
              format = "file"), 
   tar_target(fig_severity_per_disturbance_strongFilter, 
-             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = "6",
+             plot_severity_per_disturbance(FinnishNFI_tree_raw, FUNDIV_tree_FI, filter.in = 6,
                                            "fig/fig_severity_per_disturbance_strongFilter.png"), 
              format = "file")
 )
