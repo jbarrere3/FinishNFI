@@ -64,7 +64,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI,
   
   ## - make the plot
   plot.out <- FinnishNFI_tree_raw %>%
-    dplyr::select(plotcode, stand_level_dist_agent, stand_level_dist_time_since) %>%
+    dplyr::select(plotcode, stand_level_dist_agent, stand_level_dist_time_since, stand_level_dist_sever) %>%
     distinct() %>%
     filter(stand_level_dist_time_since != 4) %>%
     filter(stand_level_dist_sever %in% filter.in) %>%
