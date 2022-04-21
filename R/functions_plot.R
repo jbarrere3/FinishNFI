@@ -88,7 +88,7 @@ plot_severity_per_disturbance <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI,
     facet_wrap(~ disturbance, scales = "free_y", nrow = 1) + 
     theme_bw() + 
     xlab("Proportion of trees killed") + 
-    xlim(0, 1)
+    xlim(-0.05, 1.05)
   
   
   ## - save the plot
