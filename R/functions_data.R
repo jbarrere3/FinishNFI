@@ -133,7 +133,7 @@ process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
     mutate(year = as.numeric(substr(year.character, 1, 4))) %>%
     filter(year %in% c(surveydate1:surveydate2)) %>%
     mutate(WAI = as.numeric(gsub("\\,", "\\.", WAI))) %>%
-    group_by(plotcode, surveydate1, surveydate2, sgdd) %>%
+    group_by(plotcode, sgdd) %>%
     summarize(wai = mean(WAI, na.rm = TRUE))
 }
 
