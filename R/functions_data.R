@@ -122,7 +122,7 @@ process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
   out <- FUNDIV_plot_FI %>%
     # Compute mean sgddd for survey dates
     left_join(sgdd.table, by = "plotcode") %>%
-    gather(key = "year", value = "SGDD", as.character(c(1983:2018))) %>%
+    gather(key = "year", value = "SGDD", as.character(c(1985:2018))) %>%
     filter(year %in% c(surveydate1:surveydate2)) %>%
     group_by(plotcode, surveydate1, surveydate2) %>%
     summarize(sgdd = mean(SGDD, na.rm = TRUE)) %>%
