@@ -132,7 +132,7 @@ process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
     mutate(year = as.numeric(substr(year.character, 1, 4))) %>%
     filter(year %in% c(surveydate1:surveydate2)) %>%
     group_by(plotcode, surveydate1, surveydate2, sgdd) %>%
-    summarize(wai = mean(wai, na.rm = TRUE))
+    summarize(wai = mean(WAI, na.rm = TRUE))
 }
 
 #' Function to get the path of a file, and create directories if they don't exist
