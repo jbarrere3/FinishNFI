@@ -115,8 +115,8 @@ format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI
 #' @param FUNDIV_plot_FI Finnish NFI plot data formatted to FUNDIV template
 process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
   # Read sgdd and wai tables
-  sgdd.table <- fread(sgdd_file)
-  wai.table <- fread(wai_file)
+  sgdd.table <- fread(sgdd_file) %>% mutate(plotcode = as.character(plotcode))
+  wai.table <- fread(wai_file) %>% mutate(plotcode = as.character(plotcode))
   
   # final output
   out <- FUNDIV_plot_FI %>%
