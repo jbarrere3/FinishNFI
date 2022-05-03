@@ -57,6 +57,8 @@ list(
              format = "file"),
   tar_target(FUNDIV_plot_FI_file, write_on_disk(FUNDIV_plot_FI, "output/FinnishNFI_plot.csv"), 
              format = "file"),
+  tar_target(climate_FI_file, write_on_disk(climate_FI, "output/climate_FI.csv"), 
+             format = "file"),
   
   # Exploratory plots
   tar_target(fig_disturbed_plots, 
