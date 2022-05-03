@@ -109,7 +109,31 @@ format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI
                   ba_ha1, ba_ha2, management, disturbance.severity, disturbance.nature)
 }
 
-
+#' Format climate FinnishNFI
+#' @param sgdd_file file containing sgdd per plotcode
+#' @param wai_file file containing wai per plotcode
+#' @param FUNDIV_plot_FI Finnish NFI plot data formatted to FUNDIV template
+process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
+  # Read sgdd and wai tables
+  sgdd.table <- fread(sgdd_file)
+  wai.table <- fread(wai_file)
+  
+  # final output
+  out <- FUNDIV_plot_FI %>%
+    # Compute mean sgddd for survey dates
+    left_join(sgdd.table, by = "plotcode") %>%
+    gather(key = "year", value = "SGDD", as.character(c(1983:2018))) %>%
+    filter(year %in% c(surveydate1:surveydate2)) %>%
+    group_by(plotcode, surveydate1, surveydate2) %>%
+    summarize(sgdd = mean(SGDD, na.rm = TRUE)) %>%
+    # Compute mean WAi for surveydates
+    left_join(wai.table, by = "plotcode") %>%
+    gather(key = "year.character", value = "WAI", paste0(c(1983:2018), "_wai")) %>%
+    mutate(year = as.numeric(substr(year.character, 1, 4))) %>%
+    filter(year %in% c(surveydate1:surveydate2)) %>%
+    group_by(plotcode, surveydate1, surveydate2, sgdd) %>%
+    summarize(wai = mean(wai, na.rm = TRUE))
+}
 
 #' Function to get the path of a file, and create directories if they don't exist
 #' @param file.in character: path of the file, filename included (ex: "plot/plot.png")
