@@ -124,6 +124,7 @@ process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
     left_join(sgdd.table, by = "plotcode") %>%
     gather(key = "year", value = "SGDD", as.character(c(1985:2018))) %>%
     filter(year %in% c(surveydate1:surveydate2)) %>%
+    mutate(SGDD = as.numeric(gsub("\\,", "\\.", SGDD))) %>%
     group_by(plotcode, surveydate1, surveydate2) %>%
     summarize(sgdd = mean(SGDD, na.rm = TRUE)) %>%
     # Compute mean WAi for surveydates
@@ -131,6 +132,7 @@ process_climate <- function(sgdd_file, wai_file, FUNDIV_plot_FI){
     gather(key = "year.character", value = "WAI", paste0(c(1983:2018), "_wai")) %>%
     mutate(year = as.numeric(substr(year.character, 1, 4))) %>%
     filter(year %in% c(surveydate1:surveydate2)) %>%
+    mutate(WAI = as.numeric(gsub("\\,", "\\.", WAI))) %>%
     group_by(plotcode, surveydate1, surveydate2, sgdd) %>%
     summarize(wai = mean(WAI, na.rm = TRUE))
 }
