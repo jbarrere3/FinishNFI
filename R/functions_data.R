@@ -71,12 +71,18 @@ format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI
            surveydate2 = as.numeric(substr(as.character(survey2), 1, 4)), 
            yearsbetweensurveys = surveydate2 - surveydate1, 
            biome = NA_real_, 
+           # format disturbance nature depending on disturbance code in Finnish NFI
            disturbance.nature = case_when(stand_level_dist_agent == "A1" ~ "storm", 
                                           stand_level_dist_agent == "A5" ~ "fire", 
                                           stand_level_dist_agent == "A2" ~ "other", 
                                           substr(stand_level_dist_agent, 1, 1) == "B" ~ "other", 
                                           substr(stand_level_dist_agent, 1, 1) == "C" ~ "other", 
-                                          TRUE ~ "none")) %>%
+                                          TRUE ~ "none"), 
+           # consider no disturbance if the disturbance was before the 1st census
+           disturbance.nature = ifelse(stand_level_dist_time_since != 4, disturbance.nature, "none"),
+           # consider no disturbance if stand level severity is too low
+           disturbance.nature = ifelse(stand_level_dist_sever %in% c("1", "2", "3", "A", "B"), 
+                                       disturbance.nature, "none")) %>%
     dplyr::select(plotcode, cluster, country, longitude, latitude, disturbance.nature,
                   yearsbetweensurveys, surveydate1, surveydate2, biome) %>%
     distinct() %>%
