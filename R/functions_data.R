@@ -109,6 +109,64 @@ format_FinnishNFI_plot_to_FUNDIV <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI
                   ba_ha1, ba_ha2, management, disturbance.severity, disturbance.nature)
 }
 
+
+#' Format Finnish NFI tree table to FUNDIV plot template with a different disturbance classification
+#' @param FinnishNFI_tree_raw Finnish NFI raw tree table
+#' @param FUNDIV_tree_FI Finnish NFI tree table formatted for FUNDIV
+#' @param species table to convert species code to Latin name
+format_FinnishNFI_plot_to_FUNDIV_allDist <- function(FinnishNFI_tree_raw, FUNDIV_tree_FI, species){
+  FinnishNFI_tree_raw %>%
+    filter(x > 3040879 & x < 3681583 & y > 6570363 & y < 7888258) %>%
+    st_as_sf(coords = c("x", "y"), crs = 2393) %>%
+    st_transform(crs = 4326) %>%
+    mutate(longitude = sf::st_coordinates(.)[,1],
+           latitude = sf::st_coordinates(.)[,2]) %>%
+    st_drop_geometry() %>%
+    mutate(plotcode = as.character(plotcode), 
+           cluster = NA_real_,
+           country = "Finland", 
+           surveydate1 = as.numeric(substr(as.character(survey1), 1, 4)), 
+           surveydate2 = as.numeric(substr(as.character(survey2), 1, 4)), 
+           yearsbetweensurveys = surveydate2 - surveydate1, 
+           biome = NA_real_, 
+           # format disturbance nature depending on disturbance code in Finnish NFI
+           disturbance.nature = case_when(stand_level_dist_agent == "A1" ~ "storm", 
+                                          stand_level_dist_agent == "A5" ~ "fire", 
+                                          stand_level_dist_agent == "A2" ~ "snow", 
+                                          substr(stand_level_dist_agent, 1, 1) %in% c("B", "C") ~ "biotic", 
+                                          substr(stand_level_dist_agent, 1, 1) %in% c("A0", "A3", "A4", "AC", "A9") ~ "other", 
+                                          TRUE ~ "none"), 
+           # consider no disturbance if the disturbance was before the 1st census
+           disturbance.nature = ifelse(stand_level_dist_time_since != 4, disturbance.nature, "none"),
+           # consider no disturbance if stand level severity is too low
+           disturbance.nature = ifelse(stand_level_dist_sever %in% c("1", "2", "3", "A", "B"), 
+                                       disturbance.nature, "none")) %>%
+    dplyr::select(plotcode, cluster, country, longitude, latitude, disturbance.nature,
+                  yearsbetweensurveys, surveydate1, surveydate2, biome) %>%
+    distinct() %>%
+    filter(plotcode %in% FUNDIV_tree_FI$plotcode) %>%
+    left_join((FUNDIV_tree_FI %>%
+                 mutate(harvest = case_when(treestatus == 3 ~ 1, TRUE ~ 0), 
+                        dead = case_when(treestatus > 2 ~ 1, TRUE ~ 0)) %>%
+                 group_by(plotcode) %>%
+                 summarise(ba_ha1 = sum(ba_ha1, na.rm = T),
+                           ba_ha2 = sum(ba_ha2, na.rm = T), 
+                           n.harvest = sum(harvest, na.rm = T), 
+                           percent.dead = round(sum(dead, na.rm = T)/n()*100, digits = 0)) %>%
+                 mutate(management = case_when(n.harvest > 0 ~ 1, TRUE ~ 0)) %>%
+                 dplyr::select(plotcode, ba_ha1, ba_ha2, management, percent.dead)), 
+              by = "plotcode") %>%
+    mutate(disturbance.nature = ifelse(percent.dead == 0, "none", disturbance.nature), 
+           disturbance.severity = case_when((disturbance.nature != "none" & percent.dead %in% c(1:25)) ~ 1, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(26:50)) ~ 2, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(51:75)) ~ 3, 
+                                            (disturbance.nature != "none" & percent.dead %in% c(76:100)) ~ 4,
+                                            TRUE ~ 0)) %>%
+    dplyr::select(plotcode, cluster, country, longitude, latitude, 
+                  yearsbetweensurveys, surveydate1, surveydate2, biome, 
+                  ba_ha1, ba_ha2, management, disturbance.severity, disturbance.nature)
+}
+
 #' Format climate FinnishNFI
 #' @param sgdd_file file containing sgdd per plotcode
 #' @param wai_file file containing wai per plotcode
